@@ -14,6 +14,12 @@ class TasksController < ApplicationController
 
   def create
     @task = current_user.tasks.new(task_params)
+
+    if params[:back].present?
+      render :new, status: :unprocessable_entity
+      return
+    end
+
     if @task.save
       redirect_to root_url, notice: "タスク「#{@task.name}」を登録しました。"
       #上記と同義
@@ -35,6 +41,11 @@ class TasksController < ApplicationController
   def destroy
     task.destroy
     redirect_to root_url, notice: "タスク「#{task.name}」を削除しました。", status: :see_other
+  end
+
+  def confirm_new
+    @task = current_user.tasks.new(task_params)
+    render :new unless @task.valid?
   end
 
     private
