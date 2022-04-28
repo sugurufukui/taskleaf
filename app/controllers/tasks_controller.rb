@@ -22,6 +22,7 @@ class TasksController < ApplicationController
     end
 
     if @task.save
+      TaskMailer.creation_mail(@task).deliver_now
       redirect_to root_url, notice: "タスク「#{@task.name}」を登録しました。"
       #上記と同義
       # flash[:notice] = "タスク「#{@task.name}」を登録しました"
